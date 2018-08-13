@@ -12,5 +12,16 @@
 
     <artifactId>canaveral-testng-runner</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.ffb.canaveral2</groupId>
+            <artifactId>canaveral-core</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.14.3</version>
+        </dependency>
+    </dependencies>
 </project>

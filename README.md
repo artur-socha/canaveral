@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pawel-kaminski-krk/canaveral2.svg?branch=master)](https://travis-ci.org/pawel-kaminski-krk/canaveral2)
+
 ```
                                                    ,:
                                                  ,' |
