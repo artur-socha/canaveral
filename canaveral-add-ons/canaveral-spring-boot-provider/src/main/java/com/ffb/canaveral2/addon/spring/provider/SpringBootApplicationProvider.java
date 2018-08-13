@@ -14,18 +14,14 @@ import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.Properties;
 import java.util.Set;
 
+public class SpringBootApplicationProvider implements ApplicationProvider, SpringContextProvider {
 
-public class SpringBootApplicationProvider implements ApplicationProvider, SpringContextProvider
-{
     private static final Logger log = LoggerFactory.getLogger(SpringBootApplicationProvider.class);
 
     private final Class<?> springBaseClass;
@@ -36,9 +32,8 @@ public class SpringBootApplicationProvider implements ApplicationProvider, Sprin
     private int port;
 
     public SpringBootApplicationProvider(Class<?> springBaseClass,
-                                         FeatureToggleManager featureToggleManager,
-                                         ProgressAssertion progressAssertion)
-    {
+            FeatureToggleManager featureToggleManager,
+            ProgressAssertion progressAssertion) {
         Preconditions.checkNotNull(springBaseClass, "Cannot initialize from null base class.");
         Preconditions.checkNotNull(featureToggleManager, "Cannot initialize without null feature toggle manger.");
 
@@ -48,34 +43,22 @@ public class SpringBootApplicationProvider implements ApplicationProvider, Sprin
     }
 
     @Override
-    public boolean isInitialized()
-    {
+    public boolean isInitialized() {
         return springContext.isActive();
     }
 
     @Override
-    public Properties getProperties()
-    {
-        try
-        {
-            return springContext.getBean(PropertiesFactoryBean.class).getObject();
-        }
-        catch (IOException e)
-        {
-            log.error("Could not access properties :/", e);
-            return null;
-        }
+    public String getProperty(String propertyKey, String defaultValue) {
+        return springContext.getEnvironment().getProperty(propertyKey, defaultValue);
     }
 
     @Override
-    public FeatureToggleManager getFeatureToggleManager()
-    {
+    public FeatureToggleManager getFeatureToggleManager() {
         return featureToggleManager;
     }
 
     @Override
-    public void start(RunnerContext runnerContext)
-    {
+    public void start(RunnerContext runnerContext) {
         port = runnerContext.getFreePort();
         System.setProperty("server.port", Integer.toString(port));
 
@@ -87,41 +70,36 @@ public class SpringBootApplicationProvider implements ApplicationProvider, Sprin
     }
 
     @Override
-    public void clean()
-    {
+    public void clean() {
         springContext.close();
     }
 
     @Override
-    public int getPort()
-    {
+    public int getPort() {
         return port;
     }
 
     @Override
-    public String getEndpoint()
-    {
+    public String getEndpoint() {
         return "http://localhost:" + getPort();
     }
 
     @Override
-    public Object findBeanOrThrow(Class<?> beanClass, Set<Annotation> knownAnnotations)
-    {
+    public Object findBeanOrThrow(Class<?> beanClass, Set<Annotation> knownAnnotations) {
         return SpringBeanProviderHelper.getBean(beanClass, knownAnnotations, springContext);
     }
 
     /**
-     * this method is useful when test runner should wait for some state to change outside this initialization.
-     * for example when application needs to register in some discovery service.
+     * this method is useful when test runner should wait for some state to change outside this initialization. for
+     * example when application needs to register in some discovery service.
      *
      * @param runnerContext of the test
+     *
      * @return whether this application is started and fully initialized. by default true;
      */
     @Override
-    public boolean canProceed(RunnerContext runnerContext)
-    {
-        if (progressAssertion != ProgressAssertion.CAN_PROGRESS_ASSERTION)
-        {
+    public boolean canProceed(RunnerContext runnerContext) {
+        if (progressAssertion != ProgressAssertion.CAN_PROGRESS_ASSERTION) {
             return progressAssertion.canProceed(runnerContext);
         }
 
@@ -129,16 +107,14 @@ public class SpringBootApplicationProvider implements ApplicationProvider, Sprin
     }
 
     @Override
-    public void inject(Object instance)
-    {
+    public void inject(Object instance) {
         AutowireCapableBeanFactory beanFactory = springContext.getAutowireCapableBeanFactory();
         beanFactory.autowireBeanProperties(instance, AutowireCapableBeanFactory.AUTOWIRE_NO, false);
         beanFactory.initializeBean(instance, instance.getClass().getName());
     }
 
     @Override
-    public ConfigurableApplicationContext getSpringApplicationContext()
-    {
+    public ConfigurableApplicationContext getSpringApplicationContext() {
         return springContext;
     }
 }

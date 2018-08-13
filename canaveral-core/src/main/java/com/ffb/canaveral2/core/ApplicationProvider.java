@@ -5,7 +5,6 @@ import com.ffb.canaveral2.core.bean.BeanProvider;
 import com.ffb.canaveral2.core.runtime.ProgressAssertion;
 import com.ffb.canaveral2.core.runtime.RunnerContext;
 
-import java.util.Properties;
 import java.util.Set;
 
 public interface ApplicationProvider extends BeanProvider, BeanManager, ProgressAssertion
@@ -13,7 +12,7 @@ public interface ApplicationProvider extends BeanProvider, BeanManager, Progress
 
     boolean isInitialized();
 
-    Properties getProperties();
+    String getProperty(String propertyKey, String defaultValue);
 
     FeatureToggleManager getFeatureToggleManager();
 

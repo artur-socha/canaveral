@@ -215,8 +215,7 @@ public final class Runner
         }
         else
         {
-            throw new InitializationError("Cannot proceed as application is not ready yet. " +
-                                          "Check " + applicationProvider.getClass().getCanonicalName());
+            throw new InitializationError("Application is not ready yet. See configured progress assertion.");
         }
 
     }
@@ -230,8 +229,7 @@ public final class Runner
         }
         else
         {
-            throw new InitializationError("Could not create test context from " +
-                                          testContextProvider.getClass().getCanonicalName());
+            throw new InitializationError("Test context is not ready yet. See configured progress assertion.");
         }
 
     }
@@ -239,7 +237,7 @@ public final class Runner
     private void printBanner()
     {
         try (
-                InputStream startingBanner = getClass().getResourceAsStream("/banner.txt");
+                InputStream startingBanner = getClass().getResourceAsStream("/opening-banner.txt");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
         )
         {

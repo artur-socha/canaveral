@@ -145,8 +145,7 @@ class RunnerTest
                 .thenReturn(false);
 
         String canonicalName = applicationProviderMock.getClass().getCanonicalName();
-        InitializationError expected = new InitializationError("Cannot proceed as application is not ready yet. " +
-                                                               "Check " + canonicalName);
+        InitializationError expected = new InitializationError("Application is not ready yet. See configured progress assertion.");
 
         // when
         assertThatThrownBy(() -> runner.configureRunnerForTest(FullRunnerConfigurationTestClass.class))
@@ -172,7 +171,7 @@ class RunnerTest
                 .thenReturn(false);
 
         String canonicalName = testContextMock.getClass().getCanonicalName();
-        InitializationError expected = new InitializationError("Could not create test context from " + canonicalName);
+        InitializationError expected = new InitializationError("Test context is not ready yet. See configured progress assertion.");
         // when
         assertThatThrownBy(() -> runner.configureRunnerForTest(FullRunnerConfigurationTestClass.class))
                 // then

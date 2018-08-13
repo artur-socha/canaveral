@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="sample-spring-app" shutdownHook="disable">
+
+    <Properties>
+        <Property name="PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %5p MDC[%X{mdc-id}] ${PID:- } --- [%t] %-40.40logger{39} : %m%n</Property>
+        <Property name="CONSOLE_LOG_PATTERN">%highlight{${log4j:PATTERN}}</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log4j:CONSOLE_LOG_PATTERN}"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.springframework" level="error"/>
+        <Logger name="com.ffb" level="trace"/>
+
+        <Root level="warn">
+            <Appender-ref ref="CONSOLE"/>
+        </Root>
+    </Loggers>
+</Configuration>

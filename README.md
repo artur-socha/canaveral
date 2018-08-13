@@ -46,7 +46,7 @@ that has less dependencies and is more flexible.
 
 Currently junit 4.x, junit 5.x and test-ng is supported, but adding support for other runners is quite trivial.
 
-Canaveral's biggest advantage is to big set of mocks that can be easily configurable by custom dsl and such configuration
+Canaveral's biggest advantage is a big set of mocks that are easily configurable by custom dsl and such configuration
 can be copied from project to project while implementation details are hidden. The faster you can set your integration
 test the faster you can catch and remove bugs.
 
@@ -89,3 +89,5 @@ public class ExampleRunnerConfiguration implements RunnerConfigurationProvider {
     }
 }
 ```
+
+for more details see ```com.ffb.samples.spring.it.BaseIT``` in canaveral-samples module

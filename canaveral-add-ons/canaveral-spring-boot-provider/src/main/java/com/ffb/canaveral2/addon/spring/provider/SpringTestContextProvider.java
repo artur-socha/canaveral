@@ -15,7 +15,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -23,17 +22,14 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.DefaultResourceLoader;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 
+public class SpringTestContextProvider implements TestContextProvider {
 
-public class SpringTestContextProvider implements TestContextProvider
-{
     private static final Logger log = LoggerFactory.getLogger(SpringTestContextProvider.class);
     private final Optional<String> testPropertyFile;
     private final List<Class<?>> configurations;
@@ -41,28 +37,25 @@ public class SpringTestContextProvider implements TestContextProvider
     private AnnotationConfigApplicationContext springContext;
 
     private SpringTestContextProvider(ProgressAssertion progressAssertion,
-                                      Optional<String> testPropertyFile,
-                                      Set<Class<?>> configurations)
-    {
+            Optional<String> testPropertyFile,
+            Set<Class<?>> configurations) {
         this.progressAssertion = progressAssertion;
         this.testPropertyFile = testPropertyFile;
         this.configurations = ImmutableList.copyOf(configurations);
     }
 
-    public static Builder setUp()
-    {
+    public static Builder setUp() {
         return new Builder();
     }
 
     /**
-     * creates separate test context that has access to all application beans.
-     * Application context is used as parent context.
+     * creates separate test context that has access to all application beans. Application context is used as parent
+     * context.
      *
      * @param context runner context
      */
     @Override
-    public void initialize(RunnerContext context)
-    {
+    public void initialize(RunnerContext context) {
         FeatureToggleManager featureToggleManager = context.getApplicationProvider().getFeatureToggleManager();
         log.info("Configuring test context with {}.", configurations);
 
@@ -70,8 +63,7 @@ public class SpringTestContextProvider implements TestContextProvider
         ApplicationContext applicationContext = getApplicationSpringContext(context);
         PropertySourcesPlaceholderConfigurer propertyConfigurer =
                 getLocationPropertyConfigurer(testPropertyFile, applicationContext);
-        try
-        {
+        try {
             springContext = new AnnotationConfigApplicationContext();
             springContext.setParent(applicationContext);
             DefaultListableBeanFactory beanFactory = springContext.getDefaultListableBeanFactory();
@@ -81,59 +73,40 @@ public class SpringTestContextProvider implements TestContextProvider
 
             springContext.register(configurations.toArray(new Class<?>[0]));
             springContext.refresh();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new IllegalStateException("Could not create test context from " + configurations, e);
         }
     }
 
-    private ApplicationContext getApplicationSpringContext(RunnerContext context)
-    {
-        if (context.getApplicationProvider() instanceof SpringContextProvider)
-        {
+    private ApplicationContext getApplicationSpringContext(RunnerContext context) {
+        if (context.getApplicationProvider() instanceof SpringContextProvider) {
             return ((SpringContextProvider) context.getApplicationProvider()).getSpringApplicationContext();
-        }
-        else
-        {
+        } else {
             throw new IllegalStateException("This provider depends on " +
-                                            "com.ffb.canaveral2.addon.spring.provider.SpringContextProvider. " +
-                                            "You cannot use this provider with different ApplicationProvider " +
-                                            "implementation. Sorry :(");
+                    "com.ffb.canaveral2.addon.spring.provider.SpringContextProvider. " +
+                    "You cannot use this provider with different ApplicationProvider " +
+                    "implementation. Sorry :(");
         }
     }
 
     @Override
-    public Properties getProperties()
-    {
-        try
-        {
-            return springContext.getBean(PropertiesFactoryBean.class).getObject();
-        }
-        catch (IOException e)
-        {
-            log.error("Could not access properties :/", e);
-            return null;
-        }
+    public String getProperty(String propertyKey, String defaultValue) {
+        return springContext.getEnvironment().getProperty(propertyKey, defaultValue);
     }
 
     @Override
-    public void clean()
-    {
+    public void clean() {
         springContext.close();
     }
 
     @Override
-    public Object findBeanOrThrow(Class<?> beanClass, Set<Annotation> knownAnnotations)
-    {
+    public Object findBeanOrThrow(Class<?> beanClass, Set<Annotation> knownAnnotations) {
         return SpringBeanProviderHelper.getBean(beanClass, knownAnnotations, springContext);
     }
 
     @Override
-    public boolean canProceed(RunnerContext runnerContext)
-    {
-        if (progressAssertion != ProgressAssertion.CAN_PROGRESS_ASSERTION)
-        {
+    public boolean canProceed(RunnerContext runnerContext) {
+        if (progressAssertion != ProgressAssertion.CAN_PROGRESS_ASSERTION) {
             return progressAssertion.canProceed(runnerContext);
         }
 
@@ -141,8 +114,7 @@ public class SpringTestContextProvider implements TestContextProvider
     }
 
     private PropertySourcesPlaceholderConfigurer getLocationPropertyConfigurer(Optional<String> propertiesPath,
-                                                                               ApplicationContext applicationContext)
-    {
+            ApplicationContext applicationContext) {
         return propertiesPath
                 .map(propertiesFile -> {
                     PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
@@ -154,8 +126,7 @@ public class SpringTestContextProvider implements TestContextProvider
                 .orElseGet(() -> applicationContext.getBean(PropertySourcesPlaceholderConfigurer.class));
     }
 
-    private PropertySourcesPlaceholderConfigurer getSystemPropertyConfigurer()
-    {
+    private PropertySourcesPlaceholderConfigurer getSystemPropertyConfigurer() {
         PropertySourcesPlaceholderConfigurer systemPropertyConfigurer = new PropertySourcesPlaceholderConfigurer();
         systemPropertyConfigurer.setIgnoreResourceNotFound(true);
         systemPropertyConfigurer.setIgnoreUnresolvablePlaceholders(true);
@@ -163,32 +134,28 @@ public class SpringTestContextProvider implements TestContextProvider
         return systemPropertyConfigurer;
     }
 
-    public static class Builder
-    {
+    public static class Builder {
+
         private Optional<String> testPropertyFile = Optional.empty();
         private Set<Class<?>> configurations = new HashSet<>();
         private ProgressAssertion progressAssertion = CAN_PROGRESS_ASSERTION;
 
-        Builder withTestPropertyFile(String propertyFileResource)
-        {
+        public Builder withTestPropertyFile(String propertyFileResource) {
             this.testPropertyFile = Optional.of(propertyFileResource);
             return this;
         }
 
-        Builder addConfigurationFile(Class<?> configuration)
-        {
+        public Builder addConfigurationFile(Class<?> configuration) {
             this.configurations.add(configuration);
             return this;
         }
 
-        Builder withProgAssertion(ProgressAssertion assertion)
-        {
+        public Builder withProgAssertion(ProgressAssertion assertion) {
             this.progressAssertion = assertion;
             return this;
         }
 
-        public TestContextProvider build()
-        {
+        public TestContextProvider build() {
             Preconditions.checkArgument(!configurations.isEmpty(), "There is no spring configuration file!");
 
             return new SpringTestContextProvider(progressAssertion, testPropertyFile, configurations);

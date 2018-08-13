@@ -15,6 +15,7 @@
         <module>canaveral-runners</module>
         <module>canaveral-mocks</module>
         <module>canaveral-add-ons</module>
+        <module>canaveral-samples</module>
     </modules>
 
     <prerequisites>
@@ -37,6 +38,21 @@
             <dependency>
                 <groupId>com.ffb.canaveral2</groupId>
                 <artifactId>canaveral-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ffb.canaveral2</groupId>
+                <artifactId>canaveral2-spring-boot-provider</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ffb.canaveral2</groupId>
+                <artifactId>canaveral-junit5-runner</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ffb.canaveral2</groupId>
+                <artifactId>canaveral-downstream-http-mock</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
