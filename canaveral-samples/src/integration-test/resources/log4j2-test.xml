@@ -14,7 +14,7 @@
 
     <Loggers>
         <Logger name="org.springframework" level="error"/>
-        <Logger name="com.ffb" level="trace"/>
+        <Logger name="com.codewise" level="trace"/>
 
         <Root level="warn">
             <Appender-ref ref="CONSOLE"/>

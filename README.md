@@ -92,4 +92,4 @@ public class ExampleRunnerConfiguration implements RunnerConfigurationProvider {
 }
 ```
 
-for more details see ```com.ffb.samples.spring.it.BaseIT``` in canaveral-samples module
+for more details see ```com.codewise.samples.spring.it.BaseIT``` in canaveral-samples module

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.ffb.canaveral2</groupId>
+        <groupId>com.codewise.canaveral2</groupId>
         <artifactId>canaveral-runners</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.ffb.canaveral2</groupId>
+            <groupId>com.codewise.canaveral2</groupId>
             <artifactId>canaveral-core</artifactId>
         </dependency>
 

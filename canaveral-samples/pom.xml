@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.ffb.canaveral2</groupId>
+        <groupId>com.codewise.canaveral2</groupId>
         <artifactId>canaveral</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -39,17 +39,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.ffb.canaveral2</groupId>
+            <groupId>com.codewise.canaveral2</groupId>
             <artifactId>canaveral2-spring-boot-provider</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.ffb.canaveral2</groupId>
+            <groupId>com.codewise.canaveral2</groupId>
             <artifactId>canaveral-junit5-runner</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.ffb.canaveral2</groupId>
+            <groupId>com.codewise.canaveral2</groupId>
             <artifactId>canaveral-downstream-http-mock</artifactId>
             <scope>test</scope>
         </dependency>
