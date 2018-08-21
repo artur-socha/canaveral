@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/codewise-oss/canaveral2.svg?branch=master)](https://travis-ci.org/codewise-oss/canaveral2)
-
 ```
                                                    ,:
                                                  ,' |
@@ -92,4 +90,4 @@ public class ExampleRunnerConfiguration implements RunnerConfigurationProvider {
 }
 ```
 
-for more details see ```com.codewise.samples.spring.it.BaseIT``` in canaveral-samples module
+for more details see ```pl.codewise.samples.spring.it.BaseIT``` in canaveral-samples module

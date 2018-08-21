@@ -5,16 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.codewise.canaveral2</groupId>
+        <groupId>pl.codewise.canaveral</groupId>
         <artifactId>canaveral-add-ons</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>canaveral2-spring-boot-provider</artifactId>
+    <artifactId>canaveral-spring-boot-provider</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.codewise.canaveral2</groupId>
+            <groupId>pl.codewise.canaveral</groupId>
             <artifactId>canaveral-core</artifactId>
         </dependency>
         <dependency>

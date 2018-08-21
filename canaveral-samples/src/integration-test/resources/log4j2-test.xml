@@ -2,7 +2,9 @@
 <Configuration name="sample-spring-app" shutdownHook="disable">
 
     <Properties>
-        <Property name="PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %5p MDC[%X{mdc-id}] ${PID:- } --- [%t] %-40.40logger{39} : %m%n</Property>
+        <Property name="PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %5p MDC[%X{mdc-id}] ${PID:- } --- [%t] %-40.40logger{39} :
+            %m%n
+        </Property>
         <Property name="CONSOLE_LOG_PATTERN">%highlight{${log4j:PATTERN}}</Property>
     </Properties>
 
@@ -14,7 +16,7 @@
 
     <Loggers>
         <Logger name="org.springframework" level="error"/>
-        <Logger name="com.codewise" level="trace"/>
+        <Logger name="pl.codewise" level="trace"/>
 
         <Root level="warn">
             <Appender-ref ref="CONSOLE"/>

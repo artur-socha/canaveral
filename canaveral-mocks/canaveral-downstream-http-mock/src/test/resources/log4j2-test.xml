@@ -13,7 +13,7 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="com.codewise" level="trace"/>
+        <Logger name="pl.codewise" level="trace"/>
 
         <Root level="info">
             <Appender-ref ref="CONSOLE"/>
