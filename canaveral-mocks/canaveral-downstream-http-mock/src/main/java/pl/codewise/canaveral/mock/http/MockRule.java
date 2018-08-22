@@ -64,12 +64,10 @@ class MockRule {
             byte[] ruleBody = ruleRequest.getBody();
             byte[] inBody = incomingRequest.getBody();
             if (isNotEmpty(ruleBody)) {
-                if (isNotEmpty(inBody)) {
-                    if (!Arrays.equals(ruleBody, inBody)) {
-                        log.trace("Incoming request is not matching body [{}] of this rule [{}].",
-                                inBody, ruleBody);
-                        return false;
-                    }
+                if (!Arrays.equals(ruleBody, inBody)) {
+                    log.trace("Incoming request is not matching body [{}] of this rule [{}].",
+                            inBody, ruleBody);
+                    return false;
                 }
             }
 
@@ -119,15 +117,15 @@ class MockRule {
         return Objects.hashCode(request);
     }
 
-    public Predicate<HttpRawRequest> getCondition() {
+    Predicate<HttpRawRequest> getCondition() {
         return condition;
     }
 
-    public HttpRequestRule getRequest() {
+    HttpRequestRule getRequest() {
         return request;
     }
 
-    public HttpResponseRule getResponse() {
+    HttpResponseRule getResponse() {
         return response;
     }
 }

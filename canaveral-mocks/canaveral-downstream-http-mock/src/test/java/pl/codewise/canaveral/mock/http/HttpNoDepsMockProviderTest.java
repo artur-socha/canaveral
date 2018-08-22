@@ -37,7 +37,7 @@ class HttpNoDepsMockProviderTest {
     private DummyRunnerContext runnerContext;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         httpMockProvider = HttpNoDepsMockProvider.newConfig()
                 .registerEndpointUnder("dummy.endpoint.property")
                 .registerPortUnder("dummy.port.property")
@@ -56,13 +56,13 @@ class HttpNoDepsMockProviderTest {
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         httpMockProvider.resetToDefaults();
         httpMockProvider.stop();
     }
 
     @Test
-    public void shouldSetPropertiesFromConfig() throws Exception {
+    void shouldSetPropertiesFromConfig() throws Exception {
         // given
         tearDown();
 
@@ -89,7 +89,7 @@ class HttpNoDepsMockProviderTest {
     }
 
     @Test
-    public void shouldGetResource() {
+    void shouldGetResource() {
         // given
         HttpGet getRequest = createGetRequest("/path-to-resource?a=1");
         getRequest.addHeader("Accept", Mime.JSON.getMime());
@@ -116,7 +116,7 @@ class HttpNoDepsMockProviderTest {
     }
 
     @Test
-    public void shouldFailOnWrongAcceptHeader() {
+    void shouldFailOnWrongAcceptHeader() {
         // given
         HttpGet getRequest = createGetRequest("/path-to-resource");
         getRequest.addHeader("b", "3");
@@ -129,7 +129,7 @@ class HttpNoDepsMockProviderTest {
     }
 
     @Test
-    public void shouldFailOnWrongCustomHeader() {
+    void shouldFailOnWrongCustomHeader() {
         // given
         HttpGet getRequest = createGetRequest("/path-to-resource");
         getRequest.addHeader("Accept", Mime.JSON.getMime());
@@ -142,7 +142,7 @@ class HttpNoDepsMockProviderTest {
     }
 
     @Test
-    public void shouldFailOnWrongQuery() {
+    void shouldFailOnWrongQuery() {
         // given
         HttpGet getRequest = createGetRequest("/path-to-resource");
         getRequest.addHeader("Accept", Mime.JSON.getMime());
@@ -156,7 +156,7 @@ class HttpNoDepsMockProviderTest {
     }
 
     @Test
-    public void shouldFailOnWrongPath() {
+    void shouldFailOnWrongPath() {
         // given
         HttpGet getRequest = createGetRequest("/other-path");
         getRequest.addHeader("Accept", Mime.JSON.getMime());
@@ -170,7 +170,7 @@ class HttpNoDepsMockProviderTest {
     }
 
     @Test
-    public void shouldAddRuleAfterStart() {
+    void shouldAddRuleAfterStart() {
         // given
         httpMockProvider.createRule()
                 .whenCalledWith(Method.GET, "/other-resource")
@@ -191,7 +191,7 @@ class HttpNoDepsMockProviderTest {
     }
 
     @Test
-    public void shouldAcceptMultipleHeaderWithSameKey() {
+    void shouldAcceptMultipleHeaderWithSameKey() {
         // given
         httpMockProvider.createRule()
                 .whenCalledWith(Method.GET, "/other-resource")
@@ -213,7 +213,7 @@ class HttpNoDepsMockProviderTest {
     }
 
     @Test
-    public void shouldRespondWithMultipleHeaders() {
+    void shouldRespondWithMultipleHeaders() {
         // given
         httpMockProvider.createRule()
                 .whenCalledWith(Method.GET, "/other-resource")
@@ -234,7 +234,7 @@ class HttpNoDepsMockProviderTest {
     }
 
     @Test
-    public void shouldGetRequestBody() {
+    void shouldGetRequestBody() {
         // given
         httpMockProvider.createRule()
                 .whenCalledWith(Method.POST, "/other-resource")
