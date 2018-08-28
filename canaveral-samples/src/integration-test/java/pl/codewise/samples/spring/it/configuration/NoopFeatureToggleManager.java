@@ -4,30 +4,26 @@ import pl.codewise.canaveral.core.ApplicationProvider;
 
 import java.util.Set;
 
-public class NoopFeatureToggleManager implements ApplicationProvider.FeatureToggleManager {
+public class NoopFeatureToggleManager implements ApplicationProvider.FeatureToggleManager<Void> {
 
     @Override
-    public void enableFeatureToggles(Set<Enum> featureToggles) {
-
+    public void enableFeatureToggles(Set<Void> featureToggles) {
     }
 
     @Override
     public void reset() {
-
     }
 
     @Override
-    public boolean isFeatureEnabled(Enum featureToggle) {
+    public boolean isFeatureEnabled(Void featureToggle) {
         return false;
     }
 
     @Override
-    public void enableFeatureToggle(Enum featureToggle) {
-
+    public void enableFeatureToggle(Void featureToggle) {
     }
 
     @Override
-    public boolean clearFeature(Enum featureToggle) {
-        return false;
+    public void clearFeature(Void featureToggle) {
     }
 }

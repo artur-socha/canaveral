@@ -25,7 +25,7 @@ public class TestContext {
      * This demonstrate how configured feature manager can be injected as mock bean into test via {@link InjectTestBean}
      */
     @Autowired
-    private ApplicationProvider.FeatureToggleManager featureToggleManager;
+    private ApplicationProvider.FeatureToggleManager<Void> featureToggleManager;
 
     @Bean
     public RestClient restClient(

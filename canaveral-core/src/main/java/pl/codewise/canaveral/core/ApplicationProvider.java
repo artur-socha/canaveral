@@ -23,16 +23,16 @@ public interface ApplicationProvider extends BeanProvider, BeanManager, Progress
 
     String getEndpoint();
 
-    interface FeatureToggleManager {
+    interface FeatureToggleManager<T> {
 
-        void enableFeatureToggles(Set<Enum> featureToggles);
+        void enableFeatureToggles(Set<T> featureToggles);
 
         void reset();
 
-        boolean isFeatureEnabled(Enum featureToggle);
+        boolean isFeatureEnabled(T featureToggle);
 
-        void enableFeatureToggle(Enum featureToggle);
+        void enableFeatureToggle(T featureToggle);
 
-        boolean clearFeature(Enum featureToggle);
+        void clearFeature(T featureToggle);
     }
 }

@@ -78,14 +78,14 @@ public final class Runner {
             decorateSimple("Clearing context for {}.", runnerCache.getProviderName());
 
             try {
-                if (runnerCache.hasTestConfigurationProvider()) {
-                    decorateSimple("Cleaning test context.");
-                    runnerCache.getConfiguration().getTestContextProvider().clean();
-                }
-
                 if (runnerCache.hasApplicationProvider()) {
                     decorateSimple("Cleaning application.");
                     runnerCache.getConfiguration().getApplicationProvider().clean();
+                }
+
+                if (runnerCache.hasTestConfigurationProvider()) {
+                    decorateSimple("Cleaning test context.");
+                    runnerCache.getConfiguration().getTestContextProvider().clean();
                 }
 
                 decorateSimple("Closing remaining mocks now!");
