@@ -15,6 +15,7 @@
 
     <modules>
         <module>canaveral-downstream-http-mock</module>
+        <module>canaveral-eureka-mock</module>
     </modules>
 
 </project>
