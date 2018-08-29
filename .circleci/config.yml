@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:10-jdk
 
     working_directory: ~/canaveral
 
@@ -33,7 +33,7 @@ jobs:
           command: mvn install
   deploy:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:10-jdk
 
     working_directory: ~/canaveral
 
