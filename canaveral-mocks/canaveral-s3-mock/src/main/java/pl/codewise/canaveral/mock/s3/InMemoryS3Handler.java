@@ -191,7 +191,7 @@ public class InMemoryS3Handler extends AbstractHandler {
 
             content = new byte[] {};
             while (reader.hasNext()) {
-                reader.next(); // ignore
+                reader.next(); // header - ignore
                 byte[] chunk = reader.next();
                 content = ArrayUtils.addAll(content, chunk);
                 if (LOG.isTraceEnabled()) {

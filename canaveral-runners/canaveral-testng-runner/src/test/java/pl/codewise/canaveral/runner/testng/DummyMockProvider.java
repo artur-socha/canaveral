@@ -17,7 +17,7 @@ class DummyMockProvider extends SimpleMockProvider implements LifeCycleListener 
         super(name);
     }
 
-    final AtomicReference<RunnerContext> cacheReference = new AtomicReference<>();
+    final AtomicReference<RunnerContext> contextReference = new AtomicReference<>();
     final AtomicBoolean calledAfterAllMocksCreated = new AtomicBoolean(false);
 
     @Override
@@ -39,7 +39,7 @@ class DummyMockProvider extends SimpleMockProvider implements LifeCycleListener 
 
     @Override
     public void afterAllMocksCreated(RunnerContext runnerContext) {
-        cacheReference.compareAndSet(null, runnerContext);
+        contextReference.compareAndSet(null, runnerContext);
         calledAfterAllMocksCreated.set(true);
     }
 

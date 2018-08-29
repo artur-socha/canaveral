@@ -12,9 +12,6 @@
 
     <artifactId>canaveral-eureka-mock</artifactId>
 
-    <properties>
-        <ratpack.version>1.6.0-FORK</ratpack.version>
-    </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>

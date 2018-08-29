@@ -36,8 +36,8 @@ public class EurekaHasAppRegistered implements ProgressAssertion {
     }
 
     @Override
-    public boolean canProceed(RunnerContext cache) {
-        EurekaMockProvider eurekaMockProvider = cache.getMock(EurekaMockProvider.class);
+    public boolean canProceed(RunnerContext context) {
+        EurekaMockProvider eurekaMockProvider = context.getMock(EurekaMockProvider.class);
         Awaitility.await()
                 .atMost(maxWaitFor)
                 .pollInterval(Duration.ONE_HUNDRED_MILLISECONDS)
