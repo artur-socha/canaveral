@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 // TODO replace with real eureka client
-public class EurekaMockProviderIT {
+public class EurekaMockProviderIntegrationTest {
 
     public static final String HOST_NAME_2 = "10.0.11.12";
     public static final String LOCALHOST = "localhost";

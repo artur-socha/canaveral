@@ -23,10 +23,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
-class S3MockProviderIT {
+class S3MockProviderIntegrationTest {
 
     private static final String INIT_BUCKET = "initBucket";
     private static final String INIT_KEY = "initFile";
+    private static final String OTHER_BUCKET = "aBucket";
+
     private S3MockProvider s3MockProvider;
 
     @Mock
@@ -42,6 +44,7 @@ class S3MockProviderIT {
         s3MockProvider = S3MockProvider.newConfig()
                 .registerEndpointUnder("foo.bar")
                 .withHost("127.0.0.1")
+                .withBuckets(INIT_BUCKET, OTHER_BUCKET)
                 .put(INIT_BUCKET, INIT_KEY, "/sample.txt")
                 .build("s3Mock");
         s3MockProvider.start(runnerContext);
@@ -82,12 +85,11 @@ class S3MockProviderIT {
     void shouldRemotelyReturnLocallyAddedFile() throws IOException {
         // given
         String theContent = "aContent";
-        String bucket = "aBucket";
         String key = "aFile";
-        s3MockProvider.getS3Mock().put(bucket, key, theContent.getBytes());
+        s3MockProvider.getS3Mock().put(OTHER_BUCKET, key, theContent.getBytes());
 
         // when
-        S3Object object = s3.getObject(bucket, key);
+        S3Object object = s3.getObject(OTHER_BUCKET, key);
 
         // then
         assertS3Object(object, theContent);
@@ -120,14 +122,13 @@ class S3MockProviderIT {
     void shouldAddFile() {
         // given
         String theContent = "aContent";
-        String bucket = "aBucket";
         String key = "aFile";
 
         // when
-        s3.putObject(bucket, key, theContent);
+        s3.putObject(OTHER_BUCKET, key, theContent);
 
         // then
-        S3MockObject object = s3MockProvider.getS3Mock().get(bucket, key);
+        S3MockObject object = s3MockProvider.getS3Mock().get(OTHER_BUCKET, key);
         assertThat(object).isNotNull();
         assertThat(object.content()).isEqualTo(theContent.getBytes());
     }
@@ -136,9 +137,8 @@ class S3MockProviderIT {
     void shouldResetToDefaults() {
         // given
         String theContent = "aContent";
-        String bucket = "aBucket";
         String key = "aFile";
-        s3.putObject(bucket, key, theContent);
+        s3.putObject(OTHER_BUCKET, key, theContent);
 
         // when
         s3MockProvider.resetToDefaults();

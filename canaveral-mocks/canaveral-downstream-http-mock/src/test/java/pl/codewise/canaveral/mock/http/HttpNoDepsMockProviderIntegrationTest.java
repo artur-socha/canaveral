@@ -30,7 +30,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HttpNoDepsMockProviderTest {
+class HttpNoDepsMockProviderIntegrationTest {
 
     private int freePort;
     private HttpNoDepsMockProvider httpMockProvider;

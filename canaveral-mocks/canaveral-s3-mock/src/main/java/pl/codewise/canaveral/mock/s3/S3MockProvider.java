@@ -2,6 +2,7 @@ package pl.codewise.canaveral.mock.s3;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.codewise.canaveral.core.mock.MockConfig;
@@ -16,6 +17,7 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.ByteStreams.toByteArray;
+import static java.util.Collections.emptySet;
 
 public class S3MockProvider implements MockProvider {
 
@@ -61,7 +63,7 @@ public class S3MockProvider implements MockProvider {
 
         System.setProperty(s3MockConfig.endpointProperty, getEndpoint());
 
-        s3MockServer = S3MockServer.start(port);
+        s3MockServer = S3MockServer.start(s3MockConfig.host, port, s3MockConfig.buckets);
         loadDefaults();
     }
 
@@ -101,6 +103,7 @@ public class S3MockProvider implements MockProvider {
 
         private String endpointProperty = "aws.s3.endpoint";
         private String host = HOST;
+        private Set<String> buckets = emptySet();
         private Set<S3Entry> entries = new HashSet<>();
 
         private S3MockConfig() {
@@ -109,6 +112,7 @@ public class S3MockProvider implements MockProvider {
         @Override
         public S3MockProvider build(String mockName) {
             checkArgument(!isNullOrEmpty(endpointProperty), "Endpoint property cannot be empty!");
+            checkArgument(!buckets.isEmpty(), "S3 buckets must be provided!");
 
             return new S3MockProvider(this, mockName);
         }
@@ -120,6 +124,11 @@ public class S3MockProvider implements MockProvider {
 
         public S3MockConfig withHost(String host) {
             this.host = host;
+            return this;
+        }
+
+        public S3MockConfig withBuckets(String... buckets) {
+            this.buckets = ImmutableSet.copyOf(buckets);
             return this;
         }
 

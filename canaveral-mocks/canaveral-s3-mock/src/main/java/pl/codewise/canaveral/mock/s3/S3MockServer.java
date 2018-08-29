@@ -4,7 +4,11 @@ import org.eclipse.jetty.server.Server;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.codewise.canaveral.core.runtime.dns.LocalManagedDnsService;
+import pl.codewise.canaveral.core.runtime.dns.NameStore;
 
+import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class S3MockServer implements S3Mock {
@@ -28,7 +32,8 @@ public class S3MockServer implements S3Mock {
         }
     }
 
-    static S3Mock start(int port) {
+    static S3Mock start(String host, int port, Set<String> buckets) {
+        setupDns(host, buckets);
         return new S3MockServer(port);
     }
 
@@ -85,5 +90,15 @@ public class S3MockServer implements S3Mock {
         return s3MemoryStorage.listBuckets().stream()
                 .map(this::getBucket)
                 .collect(Collectors.toList());
+    }
+
+    private static void setupDns(String host, Collection<String> buckets) {
+        log.debug("Setting up DNS - started");
+        NameStore nameStore = NameStore.getInstance();
+        for (String bucket : buckets) {
+            nameStore.loopback(bucket + "." + host);
+        }
+        LocalManagedDnsService.installService(false);
+        log.debug("Setting up DNS - finished");
     }
 }
