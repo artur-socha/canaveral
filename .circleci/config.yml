@@ -6,8 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:10-jdk
-
+      - image: circleci/openjdk:8-jdk
     working_directory: ~/canaveral
 
     environment:
@@ -33,7 +32,7 @@ jobs:
           command: mvn install
   deploy:
     docker:
-      - image: circleci/openjdk:10-jdk
+      - image: circleci/openjdk:8-jdk
 
     working_directory: ~/canaveral
 
@@ -56,7 +55,7 @@ jobs:
 
       - run:
           name: Install AWS Cli
-          command: sudo apt-get update && sudo apt-get install -y awscli
+          command: sudo apt-get install python-pip && sudo pip install -U awscli && source ~/.bashrc
 
       - run:
           name: GPG Prepare Command
