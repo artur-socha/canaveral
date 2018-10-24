@@ -17,9 +17,12 @@ class DummyMockProvider extends SimpleMockProvider implements LifeCycleListener 
 
     final AtomicReference<RunnerContext> cacheReference = new AtomicReference<>();
     final AtomicBoolean calledAfterAllMocksCreated = new AtomicBoolean(false);
+    final AtomicBoolean calledStop = new AtomicBoolean(false);
 
     @Override
     public void initialize(RunnerContext context) {
+        calledAfterAllMocksCreated.set(false);
+        calledStop.set(false);
         PropertyHelper.setProperty("com.test.property", "test");
         PropertyHelper.setProperties(Collections.singleton("com.test.app.property"), "true");
         PropertyHelper.setProperties(
@@ -32,7 +35,7 @@ class DummyMockProvider extends SimpleMockProvider implements LifeCycleListener 
 
     @Override
     public void stop() throws Exception {
-
+        calledStop.set(true);
     }
 
     @Override

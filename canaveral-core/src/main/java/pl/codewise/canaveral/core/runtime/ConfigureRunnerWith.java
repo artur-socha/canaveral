@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 public @interface ConfigureRunnerWith {
 
     Class<? extends RunnerConfigurationProvider> configuration();
+    boolean reinitialize() default false;
 }
