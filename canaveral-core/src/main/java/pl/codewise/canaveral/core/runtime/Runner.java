@@ -42,9 +42,17 @@ public final class Runner {
     public TestInstanceHelper configureRunnerForTest(Class<?> testClass) {
         log.debug("Configuring runner from [" + testClass + "]");
         synchronized (MONITOR) {
-            RunnerConfigurationProvider provider = getConfiguration(testClass);
+            ConfigureRunnerWith annotation = getConfigurationAnnotation(testClass);
+            if (annotation.reinitialize()) {
+                CACHE_BY_PROVIDER.values().forEach(this::clearRunnerCache);
+
+                CACHE_BY_PROVIDER.clear();
+            }
+
+            RunnerConfigurationProvider provider = instantiateRunnerConfigurationProvider(testClass, annotation);
 
             String canonicalName = provider.getClass().getCanonicalName();
+
             RunnerCache runnerCache = CACHE_BY_PROVIDER.computeIfAbsent(
                     canonicalName,
                     name -> new RunnerCache(canonicalName, provider.configure())
@@ -78,21 +86,22 @@ public final class Runner {
             decorateSimple("Clearing context for {}.", runnerCache.getProviderName());
 
             try {
+                RunnerConfiguration configuration = runnerCache.getConfiguration();
                 if (runnerCache.hasApplicationProvider()) {
                     decorateSimple("Cleaning application.");
-                    runnerCache.getConfiguration().getApplicationProvider().clean();
+                    configuration.getApplicationProvider().clean();
                 }
 
                 if (runnerCache.hasTestConfigurationProvider()) {
                     decorateSimple("Cleaning test context.");
-                    runnerCache.getConfiguration().getTestContextProvider().clean();
+                    configuration.getTestContextProvider().clean();
                 }
 
                 decorateSimple("Closing remaining mocks now!");
                 runnerCache.callStopMocks();
 
                 decorateSimple("Clearing system properties");
-                PropertyHelper.clearProperties(runnerCache.getConfiguration().getSystemProperties().keySet());
+                PropertyHelper.clearProperties(configuration.getSystemProperties().keySet());
             } catch (Exception e) {
                 log.error("Could not clean.", e);
             }
@@ -101,10 +110,12 @@ public final class Runner {
     }
 
     private RunnerConfigurationProvider getConfiguration(Class<?> klass) {
-        ConfigureRunnerWith annotation = klass.getAnnotation(ConfigureRunnerWith.class);
-        if (annotation == null) {
-            throw new IllegalStateException("Could not find a ConfigureRunnerWith annotation on " + klass);
+        ConfigureRunnerWith annotation = getConfigurationAnnotation(klass);
+        return instantiateRunnerConfigurationProvider(klass, annotation);
         }
+
+    private RunnerConfigurationProvider instantiateRunnerConfigurationProvider(Class<?> klass,
+            ConfigureRunnerWith annotation) {
         Class<? extends RunnerConfigurationProvider> configurationClass = annotation.configuration();
         try {
             return configurationClass.getConstructor().newInstance();
@@ -112,6 +123,14 @@ public final class Runner {
             throw new IllegalStateException("Could not instantiate configuration provider of class " +
                     configurationClass + " defined for " + klass, e);
         }
+    }
+
+    private ConfigureRunnerWith getConfigurationAnnotation(Class<?> klass) {
+        ConfigureRunnerWith annotation = klass.getAnnotation(ConfigureRunnerWith.class);
+        if (annotation == null) {
+            throw new IllegalStateException("Could not find a ConfigureRunnerWith annotation on " + klass);
+        }
+        return annotation;
     }
 
     private void initializeCacheSafe(RunnerCache runnerCache) {

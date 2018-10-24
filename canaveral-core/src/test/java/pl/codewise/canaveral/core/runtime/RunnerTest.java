@@ -5,7 +5,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 import java.lang.annotation.Annotation;
@@ -17,7 +16,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
@@ -96,10 +95,7 @@ class RunnerTest {
 
     @Test
     void shouldInitializeTestsWithDifferentConfigurations() {
-        when(FullRunnerConfigurationProvider.applicationProviderMock.canProceed(ArgumentMatchers.any()))
-                .thenReturn(true);
-        when(FullRunnerConfigurationProvider.testContextMock.canProceed(ArgumentMatchers.any()))
-                .thenReturn(true);
+        setCanProceedForApplicationAndTestContext();
 
         runner.configureRunnerForTest(FullRunnerConfigurationTestClass.class);
 
@@ -114,10 +110,7 @@ class RunnerTest {
 
     @Test
     void shouldInitializeFullConfiguration() {
-        when(FullRunnerConfigurationProvider.applicationProviderMock.canProceed(ArgumentMatchers.any()))
-                .thenReturn(true);
-        when(FullRunnerConfigurationProvider.testContextMock.canProceed(ArgumentMatchers.any()))
-                .thenReturn(true);
+        setCanProceedForApplicationAndTestContext();
 
         // when
         runner.configureRunnerForTest(FullRunnerConfigurationTestClass.class);
@@ -135,10 +128,9 @@ class RunnerTest {
 
     @Test
     void shouldNotProceedWithFullConfigurationInitializationIfApplicationCannotStart() {
-        when(FullRunnerConfigurationProvider.applicationProviderMock.canProceed(ArgumentMatchers.any()))
+        when(FullRunnerConfigurationProvider.applicationProviderMock.canProceed(any()))
                 .thenReturn(false);
 
-        String canonicalName = FullRunnerConfigurationProvider.applicationProviderMock.getClass().getCanonicalName();
         InitializationError expected = new InitializationError("Application is not ready yet. See configured progress" +
                 " assertion.");
 
@@ -159,12 +151,11 @@ class RunnerTest {
 
     @Test
     void shouldNotProceedWithFullConfigurationInitializationIfTestContextCannotStart() {
-        when(FullRunnerConfigurationProvider.applicationProviderMock.canProceed(ArgumentMatchers.any()))
+        when(FullRunnerConfigurationProvider.applicationProviderMock.canProceed(any()))
                 .thenReturn(true);
-        when(FullRunnerConfigurationProvider.testContextMock.canProceed(ArgumentMatchers.any()))
+        when(FullRunnerConfigurationProvider.testContextMock.canProceed(any()))
                 .thenReturn(false);
 
-        String canonicalName = FullRunnerConfigurationProvider.testContextMock.getClass().getCanonicalName();
         InitializationError expected = new InitializationError("Test context is not ready yet. See configured " +
                 "progress assertion.");
         // when
@@ -185,7 +176,7 @@ class RunnerTest {
     }
 
     @Test
-    void shouldCallAfterAllMockCreated() {
+    void shouldCallAfterAllMockCreatedLifeCycleListenerInterfaceMethod() {
         // when
         runner.configureRunnerForTest(MinimalRunnerConfigurationTestClass.class);
 
@@ -205,9 +196,7 @@ class RunnerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         Clock testClock = Clock.system(ZoneId.of("UTC+9"));
 
-        when(FullRunnerConfigurationProvider.applicationProviderMock.canProceed(ArgumentMatchers.any())).thenReturn
-                (true);
-        when(FullRunnerConfigurationProvider.testContextMock.canProceed(ArgumentMatchers.any())).thenReturn(true);
+        setCanProceedForApplicationAndTestContext();
 
         when(FullRunnerConfigurationProvider.applicationProviderMock.findBeanOrThrow(eq(Clock.class), any()))
                 .thenReturn(clock);
@@ -241,5 +230,48 @@ class RunnerTest {
                 passedAnnotationCaptor.capture());
 
         assertThat(passedAnnotationCaptor.getValue()).hasSize(2);
+    }
+
+    @Test
+    public void shouldReinitializeContextWhenRequired() {
+        //given
+        setCanProceedForApplicationAndTestContext();
+        runner.configureRunnerForTest(FullRunnerConfigurationTestClass.class);
+
+        assertThat(cache.values())
+                .extracting(RunnerCache::isNotInitialized).containsOnly(false);
+
+        //given
+        RunnerCache minimalRunnerCache = cache.get(FullRunnerConfigurationProvider.class.getCanonicalName());
+
+        DummyMockProvider firstDummyMock = minimalRunnerCache.getMock(DummyMockProvider.class);
+
+        //ensure that stop method wasn't invoked
+        assertThat(firstDummyMock.calledStop.get()).isFalse();
+
+        //when
+        runner.configureRunnerForTest(ReinitializedRunnerConfigurationTestClass.class);
+
+        //then
+        RunnerCache reinitializedRunnerCache = cache.get(FullRunnerConfigurationProvider.class.getCanonicalName());
+        DummyMockProvider reinitializedDummyMockProvider = reinitializedRunnerCache.getMock(DummyMockProvider.class);
+
+        //ensures dummyMockProvider was reinitialize and new isntance was created
+        assertThat(reinitializedDummyMockProvider).isNotEqualTo(firstDummyMock);
+
+        //cache should be cleaned and initialized with new RunnerConfiguration
+        assertThat(cache).hasSize(1);
+
+        //stop method has been called for the first the first mock
+        assertThat(firstDummyMock.calledStop.get()).isTrue();
+        assertThat(reinitializedDummyMockProvider.calledStop.get()).isFalse();
+
+    }
+
+    private void setCanProceedForApplicationAndTestContext() {
+        when(FullRunnerConfigurationProvider.applicationProviderMock.canProceed(any()))
+                .thenReturn(true);
+        when(FullRunnerConfigurationProvider.testContextMock.canProceed(any()))
+                .thenReturn(true);
     }
 }
