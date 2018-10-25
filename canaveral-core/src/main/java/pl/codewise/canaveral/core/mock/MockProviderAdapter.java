@@ -11,11 +11,16 @@ public abstract class MockProviderAdapter<MockType>
 
     private final Map<String, Function<MockType, String>> propertiesSetters = new LinkedHashMap<>();
     private final String name;
-    private final MockType mock;
+    private MockType mock;
+    private MockFactory<MockType> mockFactory;
     protected int port;
 
     public MockProviderAdapter(String name, MockType mock) {
-        this.mock = mock;
+        this(name, runnerContext -> mock);
+    }
+
+    public MockProviderAdapter(String name, MockFactory<MockType> mockFactory) {
+        this.mockFactory = mockFactory;
         this.name = name;
     }
 
@@ -40,7 +45,8 @@ public abstract class MockProviderAdapter<MockType>
     }
 
     @Override
-    public void start(RunnerContext context) {
+    final public void start(RunnerContext context) throws Exception {
+        mock = mockFactory.create(context);
         port = initialize(context);
         propertiesSetters.forEach((name, consumer) -> {
             String value = consumer.apply(mock);
@@ -67,5 +73,5 @@ public abstract class MockProviderAdapter<MockType>
     /**
      * Initializes mock and returns port number assigned to mock
      */
-    protected abstract int initialize(RunnerContext context);
+    protected abstract int initialize(RunnerContext context) throws Exception;
 }
