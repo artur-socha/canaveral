@@ -10,14 +10,18 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>canaveral-mocks</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>canaveral-redis-mock</artifactId>
 
-    <modules>
-        <module>canaveral-downstream-http-mock</module>
-        <module>canaveral-eureka-mock</module>
-        <module>canaveral-s3-mock</module>
-        <module>canaveral-redis-mock</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>pl.codewise.canaveral</groupId>
+            <artifactId>canaveral-core</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>com.github.kstyrc</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>0.6</version>
+        </dependency>
+    </dependencies>
 </project>
