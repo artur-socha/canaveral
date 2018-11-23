@@ -72,7 +72,7 @@
         <jackson.version>2.9.3</jackson.version>
         <junit.version>5.2.0</junit.version>
         <log4j.version>2.11.0</log4j.version>
-        <spring-boot.version>1.5.4.RELEASE</spring-boot.version>
+        <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
     </properties>
 
     <dependencyManagement>
