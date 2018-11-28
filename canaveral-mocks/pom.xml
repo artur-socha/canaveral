@@ -17,7 +17,7 @@
         <module>canaveral-downstream-http-mock</module>
         <module>canaveral-eureka-mock</module>
         <module>canaveral-s3-mock</module>
-        <module>canaveral-prostgresql-mock</module>
+        <module>canaveral-postgresql-mock</module>
     </modules>
 
 </project>
