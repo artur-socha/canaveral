@@ -1,6 +1,5 @@
 package pl.codewise.canaveral.mock.redis;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -8,7 +7,6 @@ import org.mockito.MockitoAnnotations;
 import pl.codewise.canaveral.core.runtime.RunnerContext;
 import redis.clients.jedis.Jedis;
 
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
