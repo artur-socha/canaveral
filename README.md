@@ -41,6 +41,9 @@
                                                                                 Integration Tests Launcher
 ```
 
+[![CircleCI](https://img.shields.io/circleci/project/github/codewise-oss/canaveral.svg)](https://circleci.com/gh/codewise-oss/canaveral)
+[![CircleCI](https://img.shields.io/github/release/codewise-oss/canaveral.svg)](https://github.com/codewise-oss/canaveral/releases)
+
 Canaveral was created to aid developing and maintaining integration tests in codewise.com. This is new version
 that has less dependencies and is more flexible. 
 
