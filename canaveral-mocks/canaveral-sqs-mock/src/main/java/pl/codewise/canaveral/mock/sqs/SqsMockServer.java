@@ -36,6 +36,10 @@ public class SqsMockServer {
         return "http://localhost:" + port + "/";
     }
 
+    public SqsClient getClient() {
+        return new SqsClient(port);
+    }
+
     private void startElasticMQ() {
         sqsServer = SQSRestServerBuilder.withPort(port).start();
         sqsServer.waitUntilStarted();

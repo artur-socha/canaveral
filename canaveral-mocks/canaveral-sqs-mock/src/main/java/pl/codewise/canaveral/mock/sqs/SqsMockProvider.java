@@ -72,8 +72,9 @@ public class SqsMockProvider implements MockProvider {
             log.info("Setting system property {} to {}.", property, getProperty(property));
         });
         mockConfig.queueConfigs.forEach(queueConfig -> {
-            SqsQueue queue = new SqsClient(port).createQueue(queueConfig.getQueueName());
-            System.setProperty(queueConfig.getProperty(), queue.getQueueUrl());
+            SqsClient sqsClient = new SqsClient(port);
+            SqsQueueClient queueClient = sqsClient.createQueue(queueConfig.getQueueName());
+            System.setProperty(queueConfig.getProperty(), queueClient.getQueueUrl());
             log.info("Setting system property {} to {}.", queueConfig.property, getProperty(queueConfig.property));
         });
     }
@@ -81,6 +82,10 @@ public class SqsMockProvider implements MockProvider {
     @Override
     public void stop() {
         sqsMockServer.stop();
+    }
+
+    public SqsMockServer getSqsMockServer() {
+        return sqsMockServer;
     }
 
     @Override
