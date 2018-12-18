@@ -18,6 +18,6 @@
         <module>canaveral-eureka-mock</module>
         <module>canaveral-s3-mock</module>
         <module>canaveral-postgresql-mock</module>
+        <module>canaveral-sqs-mock</module>
     </modules>
-
 </project>

@@ -41,7 +41,7 @@
                                                                                 Integration Tests Launcher
 ```
 
-Canaveral was created to aid developing and maintaining integration test in codewise.com. This is new version
+Canaveral was created to aid developing and maintaining integration tests in codewise.com. This is new version
 that has less dependencies and is more flexible. 
 
 Currently junit 4.x, junit 5.x and test-ng is supported, but adding support for other runners is quite trivial.
