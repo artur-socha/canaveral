@@ -148,10 +148,10 @@ public class MockRuleProvider {
         }
 
         @Override
-        public void thenRespondWith(Body body, StatusCode statusCode, Map<String, List<String>> responseHeaders) {
+        public void thenRespondWith(Body body, HttpStatusCode httpStatusCode, Map<String, List<String>> responseHeaders) {
             HttpResponseRule httpResponseRule = new HttpResponseRule(body.body,
                     body.mime,
-                    statusCode,
+                    httpStatusCode,
                     ImmutableMap.copyOf(responseHeaders));
 
             HttpRequestRule httpRequestRule = new HttpRequestRule(method,
@@ -207,10 +207,10 @@ public class MockRuleProvider {
         }
 
         @Override
-        public void thenRespondWith(Body body, StatusCode statusCode, Map<String, List<String>> responseHeaders) {
+        public void thenRespondWith(Body body, HttpStatusCode httpStatusCode, Map<String, List<String>> responseHeaders) {
             HttpResponseRule httpResponseRule = new HttpResponseRule(body.body,
                     body.mime,
-                    statusCode,
+                    httpStatusCode,
                     ImmutableMap.copyOf(responseHeaders));
 
             ruleCreator.addRule(requestPredicate, httpResponseRule);
@@ -220,18 +220,18 @@ public class MockRuleProvider {
     private abstract class Respondable {
 
         public void thenRespondWith(Body body) {
-            thenRespondWith(body, StatusCode.OK);
+            thenRespondWith(body, HttpStatusCode.OK);
         }
 
-        public void thenRespondWith(Body body, StatusCode statusCode) {
-            thenRespondWith(body, statusCode, emptyMap());
+        public void thenRespondWith(Body body, HttpStatusCode httpStatusCode) {
+            thenRespondWith(body, httpStatusCode, emptyMap());
         }
 
         public void thenRespondWith(Body body, Map<String, List<String>> responseHeaders) {
-            thenRespondWith(body, StatusCode.OK, responseHeaders);
+            thenRespondWith(body, HttpStatusCode.OK, responseHeaders);
         }
 
-        abstract public void thenRespondWith(Body body, StatusCode statusCode,
+        abstract public void thenRespondWith(Body body, HttpStatusCode httpStatusCode,
                 Map<String, List<String>> responseHeaders);
     }
 }
