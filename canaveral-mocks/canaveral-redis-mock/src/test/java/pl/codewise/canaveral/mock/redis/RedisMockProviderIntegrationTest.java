@@ -7,7 +7,6 @@ import org.mockito.MockitoAnnotations;
 import pl.codewise.canaveral.core.runtime.RunnerContext;
 import redis.clients.jedis.Jedis;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +24,7 @@ class RedisMockProviderIntegrationTest {
         when(runnerContext.getFreePort()).thenCallRealMethod();
 
         redisMockProvider = RedisMockProvider.newConfig()
-                .overrideRedisVersion("redis:3.0.6")
+                .withRedisDockerImage("redis:3.0.6")
                 .registerHostUnder("my-property.redis.host")
                 .registerPortUnder("my-property.redis.port")
                 .build("redis-mock");
