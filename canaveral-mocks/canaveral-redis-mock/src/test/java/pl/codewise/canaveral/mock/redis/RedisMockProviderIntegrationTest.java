@@ -1,6 +1,7 @@
 package pl.codewise.canaveral.mock.redis;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -37,6 +38,8 @@ class RedisMockProviderIntegrationTest {
     }
 
     @Test
+    // Requires running docker daemon. It doesn't work on CI. Can be used to check changes locally.
+    @Disabled
     void shouldReadPersistedData() {
         // when
         testClient.sadd("aKey", "Value01", "Value02");
