@@ -21,6 +21,7 @@
         <module>canaveral-sqs-mock</module>
         <module>canaveral-redis-mock</module>
         <module>canaveral-jmx-service-mock</module>
+        <module>canaveral-gripmock-mock</module>
     </modules>
 
     <properties>
